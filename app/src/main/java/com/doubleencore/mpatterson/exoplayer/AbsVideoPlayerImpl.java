@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.Surface;
 import android.widget.FrameLayout;
 
+import com.google.android.exoplayer.ExoPlaybackException;
+import com.google.android.exoplayer.ExoPlayer;
 import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
 import com.google.android.exoplayer.MediaCodecTrackRenderer;
 import com.google.android.exoplayer.MediaCodecVideoTrackRenderer;
@@ -20,7 +22,7 @@ import java.io.IOException;
  * Created by michael on 11/26/15.
  */
 public abstract class AbsVideoPlayerImpl extends FrameLayout implements HlsSampleSource.EventListener,
-        MediaCodecVideoTrackRenderer.EventListener, MediaCodecAudioTrackRenderer.EventListener {
+        MediaCodecVideoTrackRenderer.EventListener, MediaCodecAudioTrackRenderer.EventListener, ExoPlayer.Listener{
 
     public AbsVideoPlayerImpl(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -102,5 +104,17 @@ public abstract class AbsVideoPlayerImpl extends FrameLayout implements HlsSampl
     @Override
     public void onAudioTrackWriteError(AudioTrack.WriteException e) {
         Log.e(AUDIO_TRACK_LISTENER, "onAudioTrackWriteError", e);
+    }
+
+    protected static final String EXOPLAYER_LISTENER = "ExoPlayer.Listener";
+
+    @Override
+    public void onPlayWhenReadyCommitted() {
+        Log.v(EXOPLAYER_LISTENER, "onPlayWhenReadyCommitted");
+    }
+
+    @Override
+    public void onPlayerError(ExoPlaybackException e) {
+        Log.e(EXOPLAYER_LISTENER, "onPlayerError", e);
     }
 }

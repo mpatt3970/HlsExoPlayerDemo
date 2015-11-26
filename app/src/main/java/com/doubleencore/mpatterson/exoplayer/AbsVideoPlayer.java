@@ -82,11 +82,22 @@ public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl implements Audio
     }
 
     public void releasePlayer() {
-        mBuilder.cancel();
+        if (mExoPlayer != null) {
+            mExoPlayer.release();
+            mExoPlayer = null;
+            mPlayerController = null;
+            mBuilder.cancel();
+        }
     }
 
     public void preparePlayer() {
-        mBuilder.build(getContext(), this, mUrl);
+        if (mExoPlayer == null) {
+            mExoPlayer = ExoPlayer.Factory.newInstance(RENDERER_COUNT, MIN_BUFFER_MS, MIN_REBUFFER_MS);
+            mPlayerController = new PlayerControl(mExoPlayer);
+            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.addListener(this);
+            mBuilder.build(getContext(), this, mUrl);
+        }
     }
 
     public Handler getMainHandler() {
