@@ -3,10 +3,10 @@ package com.doubleencore.mpatterson.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.SurfaceView;
 import android.widget.Toast;
 
 import com.doubleencore.mpatterson.R;
+import com.doubleencore.mpatterson.exoplayer.VideoControllerView;
 
 /**
  * Created by michael on 9/2/15.
@@ -16,7 +16,7 @@ public class VideoPlayerActivity extends Activity {
 
     public static final String EXTRA_URL = "extra_url";
 
-    private SurfaceView mPlayerView;
+    private VideoControllerView mPlayerView;
 
     private String mVideoUrl;
 
@@ -24,7 +24,7 @@ public class VideoPlayerActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_player);
-        mPlayerView = (SurfaceView) findViewById(R.id.player_view);
+        mPlayerView = (VideoControllerView) findViewById(R.id.player_view);
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_URL)) {
