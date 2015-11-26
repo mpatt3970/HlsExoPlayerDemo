@@ -42,6 +42,7 @@ public class HlsRendererBuilder implements ManifestFetcher.ManifestCallback<HlsP
     private Listener mListener;
     private AbsVideoPlayer mPlayer;
     private String mUrl;
+    private boolean mCanceled;
 
     public HlsRendererBuilder() { }
 
@@ -55,11 +56,17 @@ public class HlsRendererBuilder implements ManifestFetcher.ManifestCallback<HlsP
         HlsPlaylistParser parser = new HlsPlaylistParser();
         ManifestFetcher<HlsPlaylist> playlistFetcher = new ManifestFetcher<>(mUrl,
                 new DefaultUriDataSource(mContext, mUserAgent), parser);
+        mCanceled = false;
         playlistFetcher.singleLoad(mHandler.getLooper(), this);
+    }
+
+    public void cancel() {
+        mCanceled = true;
     }
 
     @Override
     public void onSingleManifest(HlsPlaylist manifest) {
+        if (mCanceled) return;
         if (manifest == null || ! (manifest instanceof HlsMasterPlaylist)) {
             mListener.onFailure(new IllegalStateException("Failed to retrieve a valid hlsPlaylist"));
             return;
@@ -98,6 +105,7 @@ public class HlsRendererBuilder implements ManifestFetcher.ManifestCallback<HlsP
 
     @Override
     public void onSingleManifestError(IOException e) {
+        if (mCanceled) return;
         mListener.onFailure(e);
     }
 }

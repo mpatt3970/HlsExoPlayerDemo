@@ -82,7 +82,7 @@ public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl implements Audio
     }
 
     public void releasePlayer() {
-
+        mBuilder.cancel();
     }
 
     public void preparePlayer() {
