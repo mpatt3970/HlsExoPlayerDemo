@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 
 import com.google.android.exoplayer.AspectRatioFrameLayout;
 import com.google.android.exoplayer.ExoPlayer;
+import com.google.android.exoplayer.MediaCodecVideoTrackRenderer;
 import com.google.android.exoplayer.TrackRenderer;
 import com.google.android.exoplayer.audio.AudioCapabilities;
 import com.google.android.exoplayer.audio.AudioCapabilitiesReceiver;
@@ -44,6 +45,7 @@ public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl implements Audio
     protected PlayerControl mPlayerController;
     private AudioCapabilitiesReceiver mAudioCapabilitiesReceiver;
     private Handler mHandler;
+    private MediaCodecVideoTrackRenderer mVideoRenderer;
 
     public AbsVideoPlayer(Context context) {
         this(context, null);
@@ -114,7 +116,9 @@ public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl implements Audio
 
     @Override
     public void onSuccess(TrackRenderer[] renderers) {
-        Log.d(TAG, "Success!");
+        mVideoRenderer = (MediaCodecVideoTrackRenderer) renderers[VIDEO_RENDERER];
+        mExoPlayer.sendMessage(mVideoRenderer, MediaCodecVideoTrackRenderer.MSG_SET_SURFACE, mSurfaceHolder.getSurface());
+        mExoPlayer.prepare(renderers);
     }
 
     @Override
@@ -123,14 +127,17 @@ public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl implements Audio
     }
 
 
-
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-
+        if (mVideoRenderer != null && mExoPlayer != null) {
+            mExoPlayer.sendMessage(mVideoRenderer, MediaCodecVideoTrackRenderer.MSG_SET_SURFACE, mSurfaceHolder.getSurface());
+        }
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-
+        if (mVideoRenderer != null && mExoPlayer != null) {
+            mExoPlayer.blockingSendMessage(mVideoRenderer, MediaCodecVideoTrackRenderer.MSG_SET_SURFACE, mSurfaceHolder.getSurface());
+        }
     }
 }
