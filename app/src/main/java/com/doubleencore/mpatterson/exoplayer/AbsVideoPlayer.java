@@ -46,6 +46,7 @@ public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl implements Audio
     private AudioCapabilitiesReceiver mAudioCapabilitiesReceiver;
     private Handler mHandler;
     private MediaCodecVideoTrackRenderer mVideoRenderer;
+    private long mPreviousPosition;
 
     public AbsVideoPlayer(Context context) {
         this(context, null);
@@ -86,6 +87,7 @@ public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl implements Audio
 
     public void releasePlayer() {
         if (mExoPlayer != null) {
+            mPreviousPosition = mExoPlayer.getCurrentPosition();
             mExoPlayer.release();
             mExoPlayer = null;
             mPlayerController = null;
@@ -118,6 +120,7 @@ public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl implements Audio
     public void onSuccess(TrackRenderer[] renderers) {
         mVideoRenderer = (MediaCodecVideoTrackRenderer) renderers[VIDEO_RENDERER];
         mExoPlayer.sendMessage(mVideoRenderer, MediaCodecVideoTrackRenderer.MSG_SET_SURFACE, mSurfaceHolder.getSurface());
+        mExoPlayer.seekTo(mPreviousPosition);
         mExoPlayer.prepare(renderers);
     }
 
