@@ -66,6 +66,7 @@ public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl implements Audio
         SurfaceView surfaceView = new SurfaceView(this.getContext());
         mSurfaceHolder = surfaceView.getHolder();
         frame.addView(surfaceView);
+        mSurfaceHolder.addCallback(this);
         mAudioCapabilitiesReceiver = new AudioCapabilitiesReceiver(getContext(), this);
         mAudioCapabilitiesReceiver.register();
         mHandler= new Handler();
@@ -119,5 +120,17 @@ public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl implements Audio
     @Override
     public void onFailure(Exception e) {
         Log.e(TAG, "HlsRendererBuilder failed", e);
+    }
+
+
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+
     }
 }

@@ -5,6 +5,7 @@ import android.media.MediaCodec;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Surface;
+import android.view.SurfaceHolder;
 import android.widget.FrameLayout;
 
 import com.google.android.exoplayer.ExoPlaybackException;
@@ -22,7 +23,9 @@ import java.io.IOException;
  * Created by michael on 11/26/15.
  */
 public abstract class AbsVideoPlayerImpl extends FrameLayout implements HlsSampleSource.EventListener,
-        MediaCodecVideoTrackRenderer.EventListener, MediaCodecAudioTrackRenderer.EventListener, ExoPlayer.Listener{
+        MediaCodecVideoTrackRenderer.EventListener, MediaCodecAudioTrackRenderer.EventListener,
+        ExoPlayer.Listener, SurfaceHolder.Callback {
+
 
     public AbsVideoPlayerImpl(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -116,5 +119,12 @@ public abstract class AbsVideoPlayerImpl extends FrameLayout implements HlsSampl
     @Override
     public void onPlayerError(ExoPlaybackException e) {
         Log.e(EXOPLAYER_LISTENER, "onPlayerError", e);
+    }
+
+    private static final String SURFACE_HOLDER_CALLBACK = "SurfaceHolder.Callback";
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        Log.v(SURFACE_HOLDER_CALLBACK, "surfaceChanged");
     }
 }
