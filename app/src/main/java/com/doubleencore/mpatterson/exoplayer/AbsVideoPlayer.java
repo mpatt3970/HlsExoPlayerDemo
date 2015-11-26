@@ -20,10 +20,22 @@ import com.google.android.exoplayer.util.PlayerControl;
  * Created by michael on 11/26/15.
  * This class handles underlying business to set up the exoplayer
  */
-public class AbsVideoPlayer extends AbsVideoPlayerImpl implements AudioCapabilitiesReceiver.Listener,
+public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl implements AudioCapabilitiesReceiver.Listener,
         HlsRendererBuilder.Listener {
 
     private static final String TAG = AbsVideoPlayer.class.getSimpleName();
+
+    // custom vars for the exoplayer
+    public static final int RENDERER_COUNT = 2;
+    private static final int MIN_BUFFER_MS = 1500;
+    private static final int MIN_REBUFFER_MS = 4000;
+    public static final int BUFFER_SEGMENT_SIZE = 64*1024;
+    public static final int BUFFER_SEGMENT_COUNT = 150;
+    public static final int ALLOWED_JOIN_TIME_MS = 5000;
+    public static final int MAX_DROPPED_FRAMES = 50;
+    // renderer positions
+    public static final int VIDEO_RENDERER = 0;
+    public static final int AUDIO_RENDERER = 1;
 
     private String mUrl;
     private SurfaceHolder mSurfaceHolder;
@@ -90,12 +102,11 @@ public class AbsVideoPlayer extends AbsVideoPlayerImpl implements AudioCapabilit
 
     @Override
     public void onSuccess(TrackRenderer[] renderers) {
-
+        Log.d(TAG, "Success!");
     }
 
     @Override
     public void onFailure(Exception e) {
         Log.e(TAG, "HlsRendererBuilder failed", e);
-        e.printStackTrace();
     }
 }
