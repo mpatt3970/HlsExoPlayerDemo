@@ -11,19 +11,21 @@ import android.widget.FrameLayout;
 import com.google.android.exoplayer.AspectRatioFrameLayout;
 import com.google.android.exoplayer.ExoPlayer;
 import com.google.android.exoplayer.audio.AudioCapabilities;
+import com.google.android.exoplayer.audio.AudioCapabilitiesReceiver;
 import com.google.android.exoplayer.util.PlayerControl;
 
 /**
  * Created by michael on 11/26/15.
  * This class handles underlying business to set up the exoplayer
  */
-public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl {
+public class AbsVideoPlayer extends AbsVideoPlayerImpl implements AudioCapabilitiesReceiver.Listener {
 
+    private String mUrl;
     private SurfaceHolder mSurfaceHolder;
     private HlsRendererBuilder mBuilder;
     private ExoPlayer mExoPlayer;
     protected PlayerControl mPlayerController;
-    private AudioCapabilities mAudioCapabilitiesReceiver;
+    private AudioCapabilitiesReceiver mAudioCapabilitiesReceiver;
     private Handler mHandler;
 
     public AbsVideoPlayer(Context context) {
@@ -47,9 +49,31 @@ public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl {
         SurfaceView surfaceView = new SurfaceView(this.getContext());
         mSurfaceHolder = surfaceView.getHolder();
         frame.addView(surfaceView);
+        mAudioCapabilitiesReceiver = new AudioCapabilitiesReceiver(getContext(), this);
+        mAudioCapabilitiesReceiver.register();
+    }
+
+    public void destroyPlayer() {
+        mAudioCapabilitiesReceiver.unregister();
+        releasePlayer();
     }
 
     public void play(String url) {
+        mUrl = url;
+    }
 
+    public void releasePlayer() {
+
+    }
+
+    public void preparePlayer() {
+
+    }
+
+    @Override
+    public void onAudioCapabilitiesChanged(AudioCapabilities audioCapabilities) {
+        // called when phone has  hdmi cord plugged in or unplugged
+        // wont worry about it for this demo cause I dont have a good way to test
+        // should probably release then re-prepare the player
     }
 }

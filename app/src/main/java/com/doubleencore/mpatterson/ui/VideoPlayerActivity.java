@@ -33,6 +33,24 @@ public class VideoPlayerActivity extends Activity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPlayerView.preparePlayer();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPlayerView.releasePlayer();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPlayerView.destroyPlayer();
+    }
+
     private void showError() {
         Toast.makeText(this, R.string.video_player_error, Toast.LENGTH_SHORT).show();
         finish();
