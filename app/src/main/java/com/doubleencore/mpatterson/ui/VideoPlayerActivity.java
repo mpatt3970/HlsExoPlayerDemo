@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.doubleencore.mpatterson.R;
-import com.doubleencore.mpatterson.exoplayer.VideoControllerView;
+import com.doubleencore.mpatterson.exoplayer.VideoPlayerView;
 
 /**
  * Created by michael on 9/2/15.
@@ -16,13 +16,13 @@ public class VideoPlayerActivity extends Activity {
 
     public static final String EXTRA_URL = "extra_url";
 
-    private VideoControllerView mPlayerView;
+    private VideoPlayerView mPlayerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_player);
-        mPlayerView = (VideoControllerView) findViewById(R.id.player_view);
+        mPlayerView = (VideoPlayerView) findViewById(R.id.player_view);
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_URL)) {

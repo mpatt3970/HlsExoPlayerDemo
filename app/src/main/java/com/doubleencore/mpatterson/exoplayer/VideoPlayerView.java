@@ -6,17 +6,17 @@ import android.util.AttributeSet;
 /**
  * Created by michael on 11/26/15.
  */
-public class VideoControllerView extends AbsVideoPlayer {
+public class VideoPlayerView extends AbsVideoPlayer {
 
-    public VideoControllerView(Context context) {
+    public VideoPlayerView(Context context) {
         super(context);
     }
 
-    public VideoControllerView(Context context, AttributeSet attrs) {
+    public VideoPlayerView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public VideoControllerView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public VideoPlayerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 }
