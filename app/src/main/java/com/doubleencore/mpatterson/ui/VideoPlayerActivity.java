@@ -18,8 +18,6 @@ public class VideoPlayerActivity extends Activity {
 
     private VideoControllerView mPlayerView;
 
-    private String mVideoUrl;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,14 +26,12 @@ public class VideoPlayerActivity extends Activity {
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_URL)) {
-            mVideoUrl = intent.getStringExtra(EXTRA_URL);
+            String url = intent.getStringExtra(EXTRA_URL);
+            mPlayerView.play(url);
         } else {
             showError();
         }
     }
-
-
-
 
     private void showError() {
         Toast.makeText(this, R.string.video_player_error, Toast.LENGTH_SHORT).show();
