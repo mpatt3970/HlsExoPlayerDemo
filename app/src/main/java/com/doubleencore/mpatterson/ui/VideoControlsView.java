@@ -93,6 +93,20 @@ public class VideoControlsView extends RelativeLayout implements IPlayerListener
         mPlayButton.setVisibility(VISIBLE);
     }
 
+    public boolean isBuffering() {
+        return mBuffering.getVisibility() == VISIBLE;
+    }
+
+    @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+        if (visibility == GONE || visibility == INVISIBLE) {
+            mListener.onControlsHidden();
+        } else if (visibility == VISIBLE) {
+            mListener.onControlsShown();
+        }
+    }
+
     public void setControlsListener(IControlsListener listener) {
         mListener = listener;
     }

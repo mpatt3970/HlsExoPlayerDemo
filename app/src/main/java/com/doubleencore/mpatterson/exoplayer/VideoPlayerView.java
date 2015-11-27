@@ -75,4 +75,14 @@ public class VideoPlayerView extends AbsVideoPlayer implements IControlsListener
             mPlayerController.seekTo((int) (mExoPlayer.getDuration()*percentComplete));
         }
     }
+
+    @Override
+    public void onControlsHidden() {
+        Log.d("HAHA", "onControlsHidden");
+    }
+
+    @Override
+    public void onControlsShown() {
+        Log.d("HAHA", "onControlsShown");
+    }
 }

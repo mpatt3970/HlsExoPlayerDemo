@@ -11,9 +11,9 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true" />
 
-    <com.doubleencore.mpatterson.ui.VideoControlsView
-        android:id="@+id/controls_view"
+    <com.doubleencore.mpatterson.ui.ControlsContainer
+        android:id="@+id/controls_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 </RelativeLayout>
