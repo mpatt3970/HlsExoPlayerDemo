@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.doubleencore.mpatterson.R;
-import com.doubleencore.mpatterson.ui.ControlsContainer;
-import com.doubleencore.mpatterson.ui.VideoControlsView;
+import com.doubleencore.mpatterson.controls.ControlsContainer;
+import com.doubleencore.mpatterson.controls.VideoControlsView;
 
 /**
  * Created by michael on 9/2/15.

@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true" />
 
-    <com.doubleencore.mpatterson.ui.ControlsContainer
+    <com.doubleencore.mpatterson.controls.ControlsContainer
         android:id="@+id/controls_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

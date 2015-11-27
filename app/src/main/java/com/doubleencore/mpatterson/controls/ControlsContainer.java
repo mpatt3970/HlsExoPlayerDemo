@@ -1,4 +1,4 @@
-package com.doubleencore.mpatterson.ui;
+package com.doubleencore.mpatterson.controls;
 
 import android.content.Context;
 import android.os.Handler;
