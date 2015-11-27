@@ -35,7 +35,6 @@
         android:textSize="16sp"
         android:layout_above="@id/seekbar"
         android:layout_alignParentRight="true"
-        tools:ignore="RtlHardcoded"
-        android:text="0:00/0:00"/>
+        tools:ignore="RtlHardcoded"/>
 
 </merge>

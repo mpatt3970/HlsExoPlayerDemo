@@ -25,6 +25,7 @@ public class ExoPlayerActivity extends Activity {
         mPlayerView = (VideoPlayerView) findViewById(R.id.player_view);
         VideoControlsView controlsView = (VideoControlsView) findViewById(R.id.controls_view);
         controlsView.setControlsListener(mPlayerView);
+        mPlayerView.setListener(controlsView);
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_URL)) {
