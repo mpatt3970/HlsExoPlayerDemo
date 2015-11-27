@@ -4,12 +4,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import com.doubleencore.mpatterson.interfaces.IControlsListener;
 import com.google.android.exoplayer.ExoPlayer;
 
 /**
  * Created by michael on 11/26/15.
  */
-public class VideoPlayerView extends AbsVideoPlayer {
+public class VideoPlayerView extends AbsVideoPlayer implements IControlsListener {
 
     public VideoPlayerView(Context context) {
         super(context);
@@ -42,6 +43,27 @@ public class VideoPlayerView extends AbsVideoPlayer {
             case ExoPlayer.STATE_ENDED:
                 Log.v(EXOPLAYER_LISTENER, "exoplayer state = ended");
                 break;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        if (mPlayerController != null) {
+            mPlayerController.pause();
+        }
+    }
+
+    @Override
+    public void onPlay() {
+        if (mPlayerController != null) {
+            mPlayerController.start();
+        }
+    }
+
+    @Override
+    public void onSeekTo(float percentComplete) {
+        if (mPlayerController != null && mExoPlayer != null) {
+            mPlayerController.seekTo((int) (mExoPlayer.getDuration()*percentComplete));
         }
     }
 }

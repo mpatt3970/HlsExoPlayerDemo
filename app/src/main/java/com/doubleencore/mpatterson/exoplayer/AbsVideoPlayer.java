@@ -41,7 +41,7 @@ public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl implements Audio
     private String mUrl;
     private SurfaceHolder mSurfaceHolder;
     private HlsRendererBuilder mBuilder;
-    private ExoPlayer mExoPlayer;
+    protected ExoPlayer mExoPlayer;
     protected PlayerControl mPlayerController;
     private AudioCapabilitiesReceiver mAudioCapabilitiesReceiver;
     private Handler mHandler;

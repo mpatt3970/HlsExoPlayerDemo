@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.doubleencore.mpatterson.R;
+import com.doubleencore.mpatterson.ui.VideoControlsView;
 
 /**
  * Created by michael on 9/2/15.
@@ -22,6 +23,8 @@ public class ExoPlayerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_player);
         mPlayerView = (VideoPlayerView) findViewById(R.id.player_view);
+        VideoControlsView controlsView = (VideoControlsView) findViewById(R.id.controls_view);
+        controlsView.setControlsListener(mPlayerView);
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_URL)) {
