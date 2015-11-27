@@ -11,7 +11,7 @@ import android.widget.FrameLayout;
  */
 public class ControlsContainer extends FrameLayout {
 
-    private static final int HIDE_DELAY = 3117;
+    private static final int HIDE_DELAY = 4117;
 
     private VideoControlsView mControls;
     private Handler mHandler;

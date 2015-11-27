@@ -44,7 +44,7 @@ public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl implements Audio
     protected ExoPlayer mExoPlayer;
     protected PlayerControl mPlayerController;
     private AudioCapabilitiesReceiver mAudioCapabilitiesReceiver;
-    private Handler mHandler;
+    protected Handler mHandler;
     private MediaCodecVideoTrackRenderer mVideoRenderer;
     private long mPreviousPosition;
 

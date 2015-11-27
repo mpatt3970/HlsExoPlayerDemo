@@ -78,11 +78,20 @@ public class VideoPlayerView extends AbsVideoPlayer implements IControlsListener
 
     @Override
     public void onControlsHidden() {
-        Log.d("HAHA", "onControlsHidden");
+        mHandler.removeCallbacks(mUpdateProgress);
     }
 
     @Override
     public void onControlsShown() {
-        Log.d("HAHA", "onControlsShown");
+        mHandler.removeCallbacks(mUpdateProgress);
+        mHandler.post(mUpdateProgress);
     }
+
+    private Runnable mUpdateProgress = new Runnable() {
+        @Override
+        public void run() {
+            mListener.onUpdateProgress(mPlayerController.getCurrentPosition() / (float) mPlayerController.getDuration());
+            mHandler.postDelayed(mUpdateProgress, 1000);
+        }
+    };
 }
