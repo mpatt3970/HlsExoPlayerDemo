@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.doubleencore.mpatterson.ui.MainActivity"
+            android:name=".MainActivity"
             android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.doubleencore.mpatterson.ui.VideoPlayerActivity"
+        <activity android:name=".exoplayer.ExoPlayerActivity"
             android:screenOrientation="sensorLandscape"/>
     </application>
 

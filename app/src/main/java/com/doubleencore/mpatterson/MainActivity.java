@@ -1,4 +1,4 @@
-package com.doubleencore.mpatterson.ui;
+package com.doubleencore.mpatterson;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.doubleencore.mpatterson.R;
+import com.doubleencore.mpatterson.exoplayer.ExoPlayerActivity;
 
 public class MainActivity extends Activity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -22,8 +22,8 @@ public class MainActivity extends Activity {
         mPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, VideoPlayerActivity.class);
-                intent.putExtra(VideoPlayerActivity.EXTRA_URL, getString(R.string.video_url));
+                Intent intent = new Intent(MainActivity.this, ExoPlayerActivity.class);
+                intent.putExtra(ExoPlayerActivity.EXTRA_URL, getString(R.string.video_url));
                 startActivity(intent);
             }
         });

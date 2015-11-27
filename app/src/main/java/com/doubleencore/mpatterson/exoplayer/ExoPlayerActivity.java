@@ -1,4 +1,4 @@
-package com.doubleencore.mpatterson.ui;
+package com.doubleencore.mpatterson.exoplayer;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,13 +6,12 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.doubleencore.mpatterson.R;
-import com.doubleencore.mpatterson.exoplayer.VideoPlayerView;
 
 /**
  * Created by michael on 9/2/15.
  */
-public class VideoPlayerActivity extends Activity {
-    private static final String TAG = VideoPlayerActivity.class.getSimpleName();
+public class ExoPlayerActivity extends Activity {
+    private static final String TAG = ExoPlayerActivity.class.getSimpleName();
 
     public static final String EXTRA_URL = "extra_url";
 
