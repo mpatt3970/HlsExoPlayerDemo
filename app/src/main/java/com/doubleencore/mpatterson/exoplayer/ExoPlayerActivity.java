@@ -8,11 +8,12 @@ import android.widget.Toast;
 import com.doubleencore.mpatterson.R;
 import com.doubleencore.mpatterson.controls.ControlsContainer;
 import com.doubleencore.mpatterson.controls.VideoControlsView;
+import com.doubleencore.mpatterson.interfaces.IEndedListener;
 
 /**
  * Created by michael on 9/2/15.
  */
-public class ExoPlayerActivity extends Activity {
+public class ExoPlayerActivity extends Activity implements IEndedListener {
     private static final String TAG = ExoPlayerActivity.class.getSimpleName();
 
     public static final String EXTRA_URL = "extra_url";
@@ -28,7 +29,8 @@ public class ExoPlayerActivity extends Activity {
         controlsView.setControlsListener(mPlayerView);
         ControlsContainer controlsContainer = (ControlsContainer) findViewById(R.id.controls_container);
         controlsContainer.addView(controlsView);
-        mPlayerView.setListener(controlsView);
+        mPlayerView.setPlayerListener(controlsView);
+        mPlayerView.setEndedListener(this);
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_URL)) {
@@ -62,4 +64,8 @@ public class ExoPlayerActivity extends Activity {
         finish();
     }
 
+    @Override
+    public void onEnded() {
+        finish();
+    }
 }

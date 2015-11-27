@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 
 import com.doubleencore.mpatterson.interfaces.IControlsListener;
+import com.doubleencore.mpatterson.interfaces.IEndedListener;
 import com.doubleencore.mpatterson.interfaces.IPlayerListener;
 import com.google.android.exoplayer.ExoPlayer;
 
@@ -14,7 +15,8 @@ import com.google.android.exoplayer.ExoPlayer;
  */
 public class VideoPlayerView extends AbsVideoPlayer implements IControlsListener {
 
-    private IPlayerListener mListener;
+    private IPlayerListener mPlayerListener;
+    private IEndedListener mEndedListener;
     private boolean mShouldSetDuration;
 
     public VideoPlayerView(Context context) {
@@ -29,9 +31,13 @@ public class VideoPlayerView extends AbsVideoPlayer implements IControlsListener
         super(context, attrs, defStyleAttr);
     }
 
-    public void setListener(IPlayerListener listener) {
-        mListener = listener;
+    public void setPlayerListener(IPlayerListener listener) {
+        mPlayerListener = listener;
         mShouldSetDuration = true;
+    }
+
+    public void setEndedListener(IEndedListener listener) {
+        mEndedListener = listener;
     }
 
     @Override
@@ -39,18 +45,18 @@ public class VideoPlayerView extends AbsVideoPlayer implements IControlsListener
         Log.v(EXOPLAYER_LISTENER, "onPlayerStateChanged");
         switch(playbackState) {
             case ExoPlayer.STATE_BUFFERING:
-                mListener.onBufferingStart();
+                mPlayerListener.onBufferingStart();
                 break;
             case ExoPlayer.STATE_READY:
-                mListener.onBufferingComplete();
+                mPlayerListener.onBufferingComplete();
                 if (mShouldSetDuration) {
-                    mListener.onSetDuration(mExoPlayer.getDuration());
-                    mListener.onUpdateProgress(0);
+                    mPlayerListener.onSetDuration(mExoPlayer.getDuration());
+                    mPlayerListener.onUpdateProgress(0);
                     mShouldSetDuration = false;
                 }
                 break;
             case ExoPlayer.STATE_ENDED:
-                Log.v(EXOPLAYER_LISTENER, "exoplayer state = ended");
+                mEndedListener.onEnded();
                 break;
         }
     }
@@ -90,7 +96,7 @@ public class VideoPlayerView extends AbsVideoPlayer implements IControlsListener
     private Runnable mUpdateProgress = new Runnable() {
         @Override
         public void run() {
-            mListener.onUpdateProgress(mPlayerController.getCurrentPosition() / (float) mPlayerController.getDuration());
+            mPlayerListener.onUpdateProgress(mPlayerController.getCurrentPosition() / (float) mPlayerController.getDuration());
             mHandler.postDelayed(mUpdateProgress, 1000);
         }
     };
