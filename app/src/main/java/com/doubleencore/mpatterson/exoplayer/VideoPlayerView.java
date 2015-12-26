@@ -96,6 +96,7 @@ public class VideoPlayerView extends AbsVideoPlayer implements IControlsListener
     private Runnable mUpdateProgress = new Runnable() {
         @Override
         public void run() {
+            if (mPlayerListener == null || mPlayerController == null) return;
             mPlayerListener.onUpdateProgress(mPlayerController.getCurrentPosition() / (float) mPlayerController.getDuration());
             mHandler.postDelayed(mUpdateProgress, 1000);
         }
