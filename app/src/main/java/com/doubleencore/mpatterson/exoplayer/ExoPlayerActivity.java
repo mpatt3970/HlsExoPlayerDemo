@@ -2,6 +2,7 @@ package com.doubleencore.mpatterson.exoplayer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -13,12 +14,13 @@ import com.doubleencore.mpatterson.interfaces.IEndedListener;
 /**
  * Created by michael on 9/2/15.
  */
-public class ExoPlayerActivity extends Activity implements IEndedListener {
+public class ExoPlayerActivity extends Activity implements IEndedListener, AudioManager.OnAudioFocusChangeListener {
     private static final String TAG = ExoPlayerActivity.class.getSimpleName();
 
     public static final String EXTRA_URL = "extra_url";
 
     private VideoPlayerView mPlayerView;
+    private AudioManager mAudioManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,7 @@ public class ExoPlayerActivity extends Activity implements IEndedListener {
         controlsContainer.addView(controlsView);
         mPlayerView.setPlayerListener(controlsView);
         mPlayerView.setEndedListener(this);
+        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_URL)) {
@@ -45,6 +48,7 @@ public class ExoPlayerActivity extends Activity implements IEndedListener {
     protected void onResume() {
         super.onResume();
         mPlayerView.preparePlayer();
+        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
     }
 
     @Override
@@ -67,5 +71,22 @@ public class ExoPlayerActivity extends Activity implements IEndedListener {
     @Override
     public void onEnded() {
         finish();
+    }
+
+    @Override
+    public void onAudioFocusChange(int focusChange) {
+        switch (focusChange) {
+            case AudioManager.AUDIOFOCUS_GAIN:
+                // dont do anything
+                // should happen after onResume when we requestAudioFocus
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS:
+                mPlayerView.onPause();
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                // just keep playing for short interruptions, ie notification noises
+                break;
+        }
     }
 }
