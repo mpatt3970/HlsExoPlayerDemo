@@ -52,6 +52,7 @@ public class VideoPlayerView extends AbsVideoPlayer implements IControlsListener
                 if (mShouldSetDuration) {
                     mPlayerListener.onSetDuration(mExoPlayer.getDuration());
                     mPlayerListener.onUpdateProgress(0);
+                    mHandler.post(mUpdateProgress);
                     mShouldSetDuration = false;
                 }
                 break;
