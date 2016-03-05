@@ -38,10 +38,9 @@ public class HlsRendererBuilder implements ManifestFetcher.ManifestCallback<HlsP
 
     private Context mContext;
     private String mUserAgent;
-    private Handler mHandler;
-    private Listener mListener;
-    private AbsVideoPlayer mPlayer;
     private String mUrl;
+    private Handler mHandler;
+    private AbsVideoPlayer mPlayer;
     private boolean mCanceled;
 
     public HlsRendererBuilder() { }
@@ -50,9 +49,9 @@ public class HlsRendererBuilder implements ManifestFetcher.ManifestCallback<HlsP
         mContext = context;
         mUserAgent = Util.getUserAgent(mContext, mContext.getString(R.string.app_name));
         mHandler = player.getMainHandler();
-        mListener = player;
         mPlayer = player;
         mUrl = url;
+
         HlsPlaylistParser parser = new HlsPlaylistParser();
         ManifestFetcher<HlsPlaylist> playlistFetcher = new ManifestFetcher<>(mUrl,
                 new DefaultUriDataSource(mContext, mUserAgent), parser);
@@ -67,29 +66,31 @@ public class HlsRendererBuilder implements ManifestFetcher.ManifestCallback<HlsP
     @Override
     public void onSingleManifest(HlsPlaylist manifest) {
         if (mCanceled) return;
+
         if (manifest == null || ! (manifest instanceof HlsMasterPlaylist)) {
-            mListener.onFailure(new IllegalStateException("Failed to retrieve a valid hlsPlaylist"));
+            mPlayer.onFailure(new IllegalStateException("Failed to retrieve a valid hlsPlaylist"));
             return;
         }
+
         HlsMasterPlaylist masterPlaylist = (HlsMasterPlaylist) manifest;
         int[] variants;
         try {
             variants = VideoFormatSelectorUtil.selectVideoFormatsForDefaultDisplay(mContext, masterPlaylist.variants, null, false);
         } catch (Exception e) {
-            mListener.onFailure(e);
+            mPlayer.onFailure(e);
             return;
         }
         if (variants.length == 0) {
-            mListener.onFailure(new IllegalStateException("No variants selected from manifest"));
+            mPlayer.onFailure(new IllegalStateException("No variants selected from manifest"));
             return;
         }
 
         LoadControl loadControl = new DefaultLoadControl(new DefaultAllocator(AbsVideoPlayer.BUFFER_SEGMENT_SIZE));
         DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         DataSource dataSource = new DefaultUriDataSource(mContext, bandwidthMeter, mUserAgent);
+
         HlsChunkSource chunkSource = new HlsChunkSource(dataSource, mUrl, manifest,
                 bandwidthMeter, variants, HlsChunkSource.ADAPTIVE_MODE_SPLICE);
-
         HlsSampleSource sampleSource = new HlsSampleSource(chunkSource, loadControl,
                 AbsVideoPlayer.BUFFER_SEGMENT_SIZE * AbsVideoPlayer.BUFFER_SEGMENT_COUNT, mHandler, mPlayer, 0);
         MediaCodecVideoTrackRenderer videoRenderer = new MediaCodecVideoTrackRenderer(mContext, sampleSource,
@@ -97,15 +98,17 @@ public class HlsRendererBuilder implements ManifestFetcher.ManifestCallback<HlsP
                 mHandler, mPlayer, AbsVideoPlayer.MAX_DROPPED_FRAMES);
         MediaCodecAudioTrackRenderer audioRenderer = new MediaCodecAudioTrackRenderer(sampleSource,
                 null, true, mHandler, mPlayer, AudioCapabilities.getCapabilities(mContext));
+
         TrackRenderer[] renderers = new TrackRenderer[AbsVideoPlayer.RENDERER_COUNT];
         renderers[AbsVideoPlayer.VIDEO_RENDERER] = videoRenderer;
         renderers[AbsVideoPlayer.AUDIO_RENDERER] = audioRenderer;
-        mListener.onSuccess(renderers);
+        mPlayer.onSuccess(renderers);
     }
 
     @Override
     public void onSingleManifestError(IOException e) {
         if (mCanceled) return;
-        mListener.onFailure(e);
+
+        mPlayer.onFailure(e);
     }
 }

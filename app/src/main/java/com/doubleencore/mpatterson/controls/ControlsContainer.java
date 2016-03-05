@@ -54,12 +54,12 @@ public class ControlsContainer extends FrameLayout {
     @Override
     public void addView(View child) {
         super.addView(child);
-        if (mControls != null) {
+        if (mControls == null && child instanceof VideoControlsView) {
+            mControls = (VideoControlsView) child;
+        } else if (mControls != null) {
             throw new IllegalStateException("ControlsContainer can only hold one view");
-        }
-        if (!(child instanceof VideoControlsView)) {
+        } else {
             throw new IllegalStateException("ControlsContainer can only have sub views of type VideoControlsView");
         }
-        mControls = (VideoControlsView) child;
     }
 }

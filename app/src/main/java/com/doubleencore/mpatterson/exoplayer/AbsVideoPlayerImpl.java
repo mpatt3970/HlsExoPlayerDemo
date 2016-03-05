@@ -26,12 +26,17 @@ public abstract class AbsVideoPlayerImpl extends FrameLayout implements HlsSampl
         MediaCodecVideoTrackRenderer.EventListener, MediaCodecAudioTrackRenderer.EventListener,
         ExoPlayer.Listener, SurfaceHolder.Callback {
 
+    private static final String SAMPLE_SOURCE_LISTENER = "SampleSource.Listener";
+    private static final String TRACK_RENDERER_LISTENER = "TrackRenderer.Listener";
+    private static final String VIDEO_TRACK_LISTENER = "VideoTrack.Listener";
+    private static final String AUDIO_TRACK_LISTENER = "AudioTrack.Listener";
+    protected static final String EXOPLAYER_LISTENER = "ExoPlayer.Listener";
+    private static final String SURFACE_HOLDER_CALLBACK = "SurfaceHolder.Callback";
+
 
     public AbsVideoPlayerImpl(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
-
-    private static final String SAMPLE_SOURCE_LISTENER = "SampleSource.Listener";
 
     @Override
     public void onLoadStarted(int sourceId, long length, int type, int trigger, Format format, long mediaStartTimeMs, long mediaEndTimeMs) {
@@ -63,8 +68,6 @@ public abstract class AbsVideoPlayerImpl extends FrameLayout implements HlsSampl
         Log.v(SAMPLE_SOURCE_LISTENER, "onDownstreamFormatChanged");
     }
 
-    private static final String TRACK_RENDERER_LISTENER = "TrackRenderer.Listener";
-
     @Override
     public void onDecoderInitializationError(MediaCodecTrackRenderer.DecoderInitializationException e) {
         Log.e(TRACK_RENDERER_LISTENER, "onDecoderInitializationError", e);
@@ -79,8 +82,6 @@ public abstract class AbsVideoPlayerImpl extends FrameLayout implements HlsSampl
     public void onDecoderInitialized(String decoderName, long elapsedRealtimeMs, long initializationDurationMs) {
         Log.v(TRACK_RENDERER_LISTENER, "onDecoderInitialized");
     }
-
-    private static final String VIDEO_TRACK_LISTENER = "VideoTrack.Listener";
 
     @Override
     public void onDroppedFrames(int count, long elapsed) {
@@ -97,8 +98,6 @@ public abstract class AbsVideoPlayerImpl extends FrameLayout implements HlsSampl
         Log.v(VIDEO_TRACK_LISTENER, "onDrawnToSurface");
     }
 
-    private static final String AUDIO_TRACK_LISTENER = "AudioTrack.Listener";
-
     @Override
     public void onAudioTrackInitializationError(AudioTrack.InitializationException e) {
         Log.v(AUDIO_TRACK_LISTENER, "onAudioTrackInitializationError");
@@ -109,8 +108,6 @@ public abstract class AbsVideoPlayerImpl extends FrameLayout implements HlsSampl
         Log.e(AUDIO_TRACK_LISTENER, "onAudioTrackWriteError", e);
     }
 
-    protected static final String EXOPLAYER_LISTENER = "ExoPlayer.Listener";
-
     @Override
     public void onPlayWhenReadyCommitted() {
         Log.v(EXOPLAYER_LISTENER, "onPlayWhenReadyCommitted");
@@ -120,8 +117,6 @@ public abstract class AbsVideoPlayerImpl extends FrameLayout implements HlsSampl
     public void onPlayerError(ExoPlaybackException e) {
         Log.e(EXOPLAYER_LISTENER, "onPlayerError", e);
     }
-
-    private static final String SURFACE_HOLDER_CALLBACK = "SurfaceHolder.Callback";
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {

@@ -50,16 +50,17 @@ public class VideoControlsView extends RelativeLayout implements IPlayerListener
         mSeekBar = (SeekBar) v.findViewById(R.id.seekbar);
         mTimer = (TextView) v.findViewById(R.id.progress_timer);
         mDurationSec = -1;
-        setClickListeners();
+        setViewListeners();
         showBuffering();
     }
 
-    private void setClickListeners() {
+    private void setViewListeners() {
         mPlayButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mListener == null) return;
+
                 mPlayButton.setActivated(!mPlayButton.isActivated());
-                // at this moment if activated, should pause, else should play
                 if (mPlayButton.isActivated()) {
                     mListener.onPause();
                 } else {
@@ -78,7 +79,9 @@ public class VideoControlsView extends RelativeLayout implements IPlayerListener
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                mListener.onSeekTo(seekBar.getProgress() / (float) seekBar.getMax());
+                if (mListener != null) {
+                    mListener.onSeekTo(seekBar.getProgress() / (float) seekBar.getMax());
+                }
             }
         });
     }
@@ -100,9 +103,11 @@ public class VideoControlsView extends RelativeLayout implements IPlayerListener
     @Override
     public void setVisibility(int visibility) {
         super.setVisibility(visibility);
+        if (mListener == null) return;
+
         if (visibility == GONE || visibility == INVISIBLE) {
             mListener.onControlsHidden();
-        } else if (visibility == VISIBLE) {
+        } else {
             mListener.onControlsShown();
         }
     }
@@ -123,12 +128,12 @@ public class VideoControlsView extends RelativeLayout implements IPlayerListener
 
     @Override
     public void onSetDuration(long durationMs) {
-        mDurationSec = (int) (durationMs/1000);
-        if (mDurationSec >= 10*ONE_HOUR) {
+        mDurationSec = (int) (durationMs / 1000);
+        if (mDurationSec >= 10 * ONE_HOUR) {
             mTimeFormat = "%02d:%02d:%02d";
         } else if (mDurationSec >= ONE_HOUR) {
             mTimeFormat = "%1d:%02d:%02d";
-        } else if (mDurationSec >= 10*ONE_MINUTE) {
+        } else if (mDurationSec >= 10 * ONE_MINUTE) {
             mTimeFormat = "%02d:%02d";
         } else {
             mTimeFormat = "%1d:%02d";
@@ -146,10 +151,11 @@ public class VideoControlsView extends RelativeLayout implements IPlayerListener
 
     private String formatTime(int timeSec) {
         if (TextUtils.isEmpty(mTimeFormat)) return "00:00";
-        int hours = timeSec/ONE_HOUR;
-        int remainder = timeSec%ONE_HOUR;
-        int minutes = remainder/ONE_MINUTE;
-        int seconds = remainder%ONE_MINUTE;
+
+        int hours = timeSec / ONE_HOUR;
+        int remainder = timeSec % ONE_HOUR;
+        int minutes = remainder / ONE_MINUTE;
+        int seconds = remainder % ONE_MINUTE;
         if (mTimeFormat.length() > 9) {
             return String.format(mTimeFormat, hours, minutes, seconds);
         } else {

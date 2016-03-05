@@ -27,10 +27,13 @@ public class ExoPlayerActivity extends Activity implements IEndedListener, Audio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_player);
         mPlayerView = (VideoPlayerView) findViewById(R.id.player_view);
+
         VideoControlsView controlsView = new VideoControlsView(this);
         controlsView.setControlsListener(mPlayerView);
+
         ControlsContainer controlsContainer = (ControlsContainer) findViewById(R.id.controls_container);
         controlsContainer.addView(controlsView);
+
         mPlayerView.setPlayerListener(controlsView);
         mPlayerView.setEndedListener(this);
         mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
@@ -38,7 +41,7 @@ public class ExoPlayerActivity extends Activity implements IEndedListener, Audio
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_URL)) {
             String url = intent.getStringExtra(EXTRA_URL);
-            mPlayerView.play(url);
+            mPlayerView.setUrl(url);
         } else {
             showError();
         }

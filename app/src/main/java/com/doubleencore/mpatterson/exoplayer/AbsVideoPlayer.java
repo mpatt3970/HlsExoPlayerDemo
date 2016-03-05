@@ -27,26 +27,27 @@ public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl implements Audio
     private static final String TAG = AbsVideoPlayer.class.getSimpleName();
 
     // custom vars for the exoplayer
-    public static final int RENDERER_COUNT = 2;
+    // can be adjusted for different playback needs
     private static final int MIN_BUFFER_MS = 1500;
     private static final int MIN_REBUFFER_MS = 4000;
     public static final int BUFFER_SEGMENT_SIZE = 64*1024;
     public static final int BUFFER_SEGMENT_COUNT = 150;
     public static final int ALLOWED_JOIN_TIME_MS = 5000;
     public static final int MAX_DROPPED_FRAMES = 50;
-    // renderer positions
+    // track renderer positions. could also include captions or metadata tracks
+    public static final int RENDERER_COUNT = 2;
     public static final int VIDEO_RENDERER = 0;
     public static final int AUDIO_RENDERER = 1;
 
     private String mUrl;
     private SurfaceHolder mSurfaceHolder;
     private HlsRendererBuilder mBuilder;
-    protected ExoPlayer mExoPlayer;
-    protected PlayerControl mPlayerController;
     private AudioCapabilitiesReceiver mAudioCapabilitiesReceiver;
-    protected Handler mHandler;
     private MediaCodecVideoTrackRenderer mVideoRenderer;
     private long mPreviousPosition;
+    protected ExoPlayer mExoPlayer;
+    protected PlayerControl mPlayerController;
+    protected Handler mHandler;
 
     public AbsVideoPlayer(Context context) {
         this(context, null);
@@ -64,12 +65,12 @@ public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl implements Audio
     private void init() {
         AspectRatioFrameLayout frame = new AspectRatioFrameLayout(this.getContext());
         this.addView(frame);
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) frame.getLayoutParams();
-        lp.gravity = Gravity.CENTER;
+
         SurfaceView surfaceView = new SurfaceView(this.getContext());
         mSurfaceHolder = surfaceView.getHolder();
         frame.addView(surfaceView);
         mSurfaceHolder.addCallback(this);
+
         mAudioCapabilitiesReceiver = new AudioCapabilitiesReceiver(getContext(), this);
         mAudioCapabilitiesReceiver.register();
         mHandler= new Handler();
@@ -81,7 +82,7 @@ public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl implements Audio
         releasePlayer();
     }
 
-    public void play(String url) {
+    public void setUrl(String url) {
         mUrl = url;
     }
 
@@ -128,7 +129,6 @@ public abstract class AbsVideoPlayer extends AbsVideoPlayerImpl implements Audio
     public void onFailure(Exception e) {
         Log.e(TAG, "HlsRendererBuilder failed", e);
     }
-
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {

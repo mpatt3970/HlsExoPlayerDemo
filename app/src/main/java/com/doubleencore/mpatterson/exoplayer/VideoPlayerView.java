@@ -20,20 +20,20 @@ public class VideoPlayerView extends AbsVideoPlayer implements IControlsListener
     private boolean mShouldSetDuration;
 
     public VideoPlayerView(Context context) {
-        super(context);
+        this(context, null, 0);
     }
 
     public VideoPlayerView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public VideoPlayerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mShouldSetDuration = true;
     }
 
     public void setPlayerListener(IPlayerListener listener) {
         mPlayerListener = listener;
-        mShouldSetDuration = true;
     }
 
     public void setEndedListener(IEndedListener listener) {
@@ -98,6 +98,7 @@ public class VideoPlayerView extends AbsVideoPlayer implements IControlsListener
         @Override
         public void run() {
             if (mPlayerListener == null || mPlayerController == null) return;
+
             mPlayerListener.onUpdateProgress(mPlayerController.getCurrentPosition() / (float) mPlayerController.getDuration());
             mHandler.postDelayed(mUpdateProgress, 1000);
         }
