@@ -109,6 +109,11 @@ public abstract class AbsVideoPlayerImpl extends FrameLayout implements HlsSampl
     }
 
     @Override
+    public void onAudioTrackUnderrun(int bufferSize, long bufferSizeMs, long elapsedSinceLastFeedMs) {
+        Log.e(AUDIO_TRACK_LISTENER, "onAudioTrackUnderrun");
+    }
+
+    @Override
     public void onPlayWhenReadyCommitted() {
         Log.v(EXOPLAYER_LISTENER, "onPlayWhenReadyCommitted");
     }

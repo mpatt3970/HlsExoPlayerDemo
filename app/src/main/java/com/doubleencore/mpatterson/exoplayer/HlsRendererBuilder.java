@@ -8,15 +8,20 @@ import com.doubleencore.mpatterson.R;
 import com.google.android.exoplayer.DefaultLoadControl;
 import com.google.android.exoplayer.LoadControl;
 import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
+import com.google.android.exoplayer.MediaCodecSelector;
 import com.google.android.exoplayer.MediaCodecVideoTrackRenderer;
 import com.google.android.exoplayer.TrackRenderer;
 import com.google.android.exoplayer.audio.AudioCapabilities;
 import com.google.android.exoplayer.chunk.VideoFormatSelectorUtil;
+import com.google.android.exoplayer.extractor.ts.PtsTimestampAdjuster;
+import com.google.android.exoplayer.hls.DefaultHlsTrackSelector;
 import com.google.android.exoplayer.hls.HlsChunkSource;
 import com.google.android.exoplayer.hls.HlsMasterPlaylist;
 import com.google.android.exoplayer.hls.HlsPlaylist;
 import com.google.android.exoplayer.hls.HlsPlaylistParser;
 import com.google.android.exoplayer.hls.HlsSampleSource;
+import com.google.android.exoplayer.hls.HlsTrackSelector;
+import com.google.android.exoplayer.hls.PtsTimestampAdjusterProvider;
 import com.google.android.exoplayer.upstream.DataSource;
 import com.google.android.exoplayer.upstream.DefaultAllocator;
 import com.google.android.exoplayer.upstream.DefaultBandwidthMeter;
@@ -89,15 +94,16 @@ public class HlsRendererBuilder implements ManifestFetcher.ManifestCallback<HlsP
         DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         DataSource dataSource = new DefaultUriDataSource(mContext, bandwidthMeter, mUserAgent);
 
-        HlsChunkSource chunkSource = new HlsChunkSource(dataSource, mUrl, manifest,
-                bandwidthMeter, variants, HlsChunkSource.ADAPTIVE_MODE_SPLICE);
+        HlsChunkSource chunkSource = new HlsChunkSource(true, dataSource, mUrl, manifest,
+                DefaultHlsTrackSelector.newDefaultInstance(mContext), bandwidthMeter,
+                new PtsTimestampAdjusterProvider(), HlsChunkSource.ADAPTIVE_MODE_SPLICE);
         HlsSampleSource sampleSource = new HlsSampleSource(chunkSource, loadControl,
                 AbsVideoPlayer.BUFFER_SEGMENT_SIZE * AbsVideoPlayer.BUFFER_SEGMENT_COUNT, mHandler, mPlayer, 0);
         MediaCodecVideoTrackRenderer videoRenderer = new MediaCodecVideoTrackRenderer(mContext, sampleSource,
-                MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING, AbsVideoPlayer.ALLOWED_JOIN_TIME_MS,
-                mHandler, mPlayer, AbsVideoPlayer.MAX_DROPPED_FRAMES);
+                MediaCodecSelector.DEFAULT, MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING,
+                AbsVideoPlayer.ALLOWED_JOIN_TIME_MS, mHandler, mPlayer, AbsVideoPlayer.MAX_DROPPED_FRAMES);
         MediaCodecAudioTrackRenderer audioRenderer = new MediaCodecAudioTrackRenderer(sampleSource,
-                null, true, mHandler, mPlayer, AudioCapabilities.getCapabilities(mContext));
+                MediaCodecSelector.DEFAULT, null, true, mHandler, mPlayer);
 
         TrackRenderer[] renderers = new TrackRenderer[AbsVideoPlayer.RENDERER_COUNT];
         renderers[AbsVideoPlayer.VIDEO_RENDERER] = videoRenderer;
